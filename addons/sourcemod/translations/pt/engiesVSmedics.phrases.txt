@@ -1,0 +1,102 @@
+"Phrases"
+{
+	"betray_team"
+	{
+		"pt"	"{white}Você não pode {red}trair {white}seu time neste modo de jogo!"
+	}
+	
+	"change_class"
+	{
+		"pt"	"{white}Você não pode {red}mudar de classe {white}nesse gamemode!"
+	}
+	
+	"change_spectator"
+	{
+		"pt"	"Você não pode ir para o espectador agora!"
+	}
+	
+	"only_medic"
+	{
+		"pt"	"{white}No time {blue}zombi{white}, você so pode ser medico!"
+	}
+	
+	"only_engineer"
+	{
+		"pt"	"In survivor team, you can only be an engineer!"
+	}
+	
+	"infected"
+	{
+		"pt"	"{red}Você foi infectado!, você não pode voltar mais para a sua equipe anterior."
+	}
+		
+	"version"
+	{
+		"pt"	"{white}Esse servidor esta rodando {red}Engineer {white}vs {blue}Zombies {white}v1.2.5 {gray}(Modificado por DGB)"
+	}
+	
+	"power_up"
+	{
+		"pt"	"{red}Os zombis agora estão malucos, sobreviva o maximo possivel!"
+	}
+	
+	"infection_start"
+	{
+		"en"	"{white}A {red}Infecção {white}começara daqui a pouco..."
+	}
+	
+	"infection_unleashed"
+	{
+		"pt"	"{red}Os médicos zumbis estão agora soltos!"
+	}
+
+	"ZombieTutorial_Menu"
+	{
+		"pt"	"[ Tutorial Zumbi (Médicos) ]"
+	}
+
+	"ZombieTutorial_Line1"
+	{
+		"pt"	"● Seu objetivo é matar todos os engenheiros e vencer a rodada."
+	}
+
+	"ZombieTutorial_Line2"
+	{
+		"pt"	"● Você tem vidas altas e mais knockback, 2 pulos extras e mais velocidade."
+	}
+
+	"ZombieTutorial_Line3"
+	{
+		"pt"	"● Faça o seu máximo para os engenheiros não vençam a rodada, bom jogo..."
+	}
+
+	"EngieTutorial_Line1"
+	{
+		"pt"	"● Seu objetivo é sobreviver e ajudar sua equipe contra os zombis ate a rodada acabar."
+	}
+
+	"EngieTutorial_Line2"
+	{
+		"pt"	"● Construa dispensers e teleportes/pads para se defender dos zumbis."
+	}
+
+	"EngieTutorial_Line3"
+	{
+		"pt"	"● Você contem criticos constantes e regeneração de metal a cada 1 segundo (10 Metais a cada 1 segundo)."
+	}
+
+	"EngieTutorial_Line4"
+	{
+		"pt"	"● Você contem varios Pads, como pads de velocidade e pads de pulos, para ter acesso a isso, escreva: !pads"
+	}
+
+	"EngieTutorial_Line5"
+	{
+		"pt"	"● Faça o seu maximo para não ser pego pelos zombis, boa sorte..."
+	}
+
+	"EngieTutorial_Menu"
+	{
+		"pt"	"[ Tutorial dos Engenheiros ]"
+	}
+}

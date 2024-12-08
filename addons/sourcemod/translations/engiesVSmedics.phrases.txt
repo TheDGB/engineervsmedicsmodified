@@ -1,0 +1,102 @@
+"Phrases"
+{
+	"betray_team"
+	{
+		"en"	"{white}You cannot {red}betray {white}your team in this game mode!"
+	}
+	
+	"change_class"
+	{
+		"en"	"{white}You can't {red}change {white} classes in this gamemode!"
+	}
+	
+	"change_spectator"
+	{
+		"en"	"{red}You can't go {white}to the spectator now!"
+	}
+	
+	"only_medic"
+	{
+		"en"	"{white}On the {blue}zombi{white} team, you can only be a medic!"
+	}
+	
+	"only_engineer"
+	{
+		"en"	"In survivor team, you can only be an engineer!"
+	}
+	
+	"infected"
+	{
+		"en"	"{red}You've been infected! You can't go back to your previous team."
+	}
+		
+	"version"
+	{
+		"en"	"{white}This server is running {red}Engineer {white}vs {blue}Zombies {white}v1.2.5 {gray}(Modified and created by shewowkees/DGB)"
+	}
+	
+	"power_up"
+	{
+		"en"	"{red}The zombies are crazy now, survive as long as possible!"
+	}
+	
+	"infection_start"
+	{
+		"en"	"{white}The {red}{white}Infection will start soon..."
+	}
+	
+	"infection_unleashed"
+	{
+		"en"	"{red}The zombies are now on the loose!"
+	}
+
+	"ZombieTutorial_Menu"
+	{
+		"en"	"[ Zombie Tutorial (Medics) ]"
+	}
+
+	"ZombieTutorial_Line1"
+	{
+		"en"	"● Your goal is to kill all the engineers and win the round."
+	}
+
+	"ZombieTutorial_Line2"
+	{
+		"en"	"● You have higher lives and more knockback, and more speed."
+	}
+
+	"ZombieTutorial_Line3"
+	{
+		"en"	"● Do your best so the engineers don't win the round, good game..."
+	}
+
+	"EngieTutorial_Line1"
+	{
+		"en"	"● Your objective is to survive and help your team against the zombies until the round ends."
+	}
+
+	"EngieTutorial_Line2"
+	{
+		"en"	"● Do your best so the engineers don't win the round, good game..."
+	}
+
+	"EngieTutorial_Line3"
+	{
+		"en"	"● You have constant critical hits and metal regeneration every 1 second (10 Metal every 1 second)."
+	}
+
+	"EngieTutorial_Line4"
+	{
+		"en"	"● It contains several Pads, such as speed pads and jump pads, to access them, type: !pads"
+	}
+
+	"EngieTutorial_Line5"
+	{
+		"en"	"● Do your best not to get caught by the zombies, good luck..."
+	}
+
+	"EngieTutorial_Menu"
+	{
+		"en"	"[ Engineers' Tutorial ]"
+	}
+}
