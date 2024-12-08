@@ -10,6 +10,7 @@ Everything that was changed in the script has the purpose of making it functiona
 A very basic modification to the gamemode that received a lot of love from the team fortress 2 community.
 
 
+
 (Portuguese Version)
 
 **⚠ AVISO! ESSA E A PRIMEIRA MODIFICAÇÃO FEITA E PUBLICADA NO OPPRESSIVE TERRITORY, ENTÃO EXPECTE ERROS OU AVISOS DE COMPILAGEM.**
