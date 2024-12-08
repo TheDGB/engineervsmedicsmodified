@@ -1,6 +1,5 @@
 # Engineer VS Medics Modified (Oppressive Territory)
-**⚠ AVISO! ESSA E A PRIMEIRA MODIFICAÇÃO FEITA E PUBLICADA NO OPPRESSIVE TERRITORY, ENTÃO EXPECTE ERROS OU AVISOS DE COMPILAGEM.**
-
+(English Version)
 **⚠ WARNING! THIS IS THE FIRST MODIFICATION MADE AND PUBLISHED ON OPPRESSIVE TERRITORY, SO EXPECT COMPILATION ERRORS OR WARNINGS.**
 
 
@@ -9,10 +8,16 @@ Everything that was changed in the script has the purpose of making it functiona
 
 A very basic modification to the gamemode that received a lot of love from the team fortress 2 community.
 
+
+(Portuguese Version)
+**⚠ AVISO! ESSA E A PRIMEIRA MODIFICAÇÃO FEITA E PUBLICADA NO OPPRESSIVE TERRITORY, ENTÃO EXPECTE ERROS OU AVISOS DE COMPILAGEM.**
+
 Uma modificação do Engineer VS Medics do criador shewowkees, criada em 2017, inspirada nos vídeos de muselk
 Tudo o que foi alterado no script tem o propósito de torná-lo funcional e agregar mais coisas ao plugin
 
 Uma modificação muito básica no modo de jogo que recebeu muito amor da comunidade do Team Fortress 2.
+
+
 
 Original publication: https://forums.alliedmods.net/showthread.php?p=2513026
 
