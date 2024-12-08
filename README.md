@@ -20,7 +20,7 @@ A very basic modification to the gamemode that received a lot of love from the t
 Uma modificação do Engineer VS Medics do criador shewowkees, criada em 2017, inspirada nos vídeos de muselk
 Tudo o que foi alterado no script tem o propósito de torná-lo funcional e agregar mais coisas ao plugin
 
-Quer ajudar no projeto por algum motivo?, você pode modificar ou conversar comigo sobre a modificação.
+Quer ajudar no projeto?, você pode modificar ou conversar comigo sobre a modificação.
 
 Uma modificação muito básica no modo de jogo que recebeu muito amor da comunidade do Team Fortress 2.
 
