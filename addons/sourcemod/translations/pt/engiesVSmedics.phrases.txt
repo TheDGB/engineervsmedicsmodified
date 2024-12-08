@@ -32,7 +32,7 @@
 		
 	"version"
 	{
-		"pt"	"{white}Esse servidor esta rodando {red}Engineer {white}vs {blue}Zombies {white}v1.2.5 {gray}(Modificado por DGB)"
+		"pt"	"{darkblue}Esse servidor esta rodando {red}Engineer {white}vs {blue}Zombies {darkblue}v1.2.5 {gray}(Modificado e criado por shewowkees/DGB)"
 	}
 	
 	"power_up"
