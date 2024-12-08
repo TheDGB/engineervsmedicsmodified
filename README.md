@@ -6,10 +6,12 @@
 
 A modification of Engineer VS Medics from the creator shewowkees, created in 2017, inspired by muselk's videos
 Everything that was changed in the script has the purpose of making it functional and adding more things to the plugin
+
 A very basic modification to the gamemode that received a lot of love from the team fortress 2 community.
 
 Uma modificação do Engineer VS Medics do criador shewowkees, criada em 2017, inspirada nos vídeos de muselk
 Tudo o que foi alterado no script tem o propósito de torná-lo funcional e agregar mais coisas ao plugin
+
 Uma modificação muito básica no modo de jogo que recebeu muito amor da comunidade do Team Fortress 2.
 
 Original publication: https://forums.alliedmods.net/showthread.php?p=2513026
