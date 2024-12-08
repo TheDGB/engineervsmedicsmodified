@@ -21,7 +21,7 @@ Tudo o que foi alterado no script tem o propósito de torná-lo funcional e agre
 Uma modificação muito básica no modo de jogo que recebeu muito amor da comunidade do Team Fortress 2.
 
 
-= ------------------------------------------------------------------------------------------------------------------------------------ =
+= -------------------------------------------------------------------------------------------------------------------- =
 
 Original publication: https://forums.alliedmods.net/showthread.php?p=2513026
 
