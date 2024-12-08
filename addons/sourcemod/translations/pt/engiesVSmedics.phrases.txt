@@ -50,6 +50,21 @@
 		"pt"	"{red}Os médicos zumbis estão agora soltos!"
 	}
 
+	"hud_preparation"
+	{
+		"pt"	"Preparação"
+	}
+
+	"hud_round"
+	{
+		"pt"	"Tempo Restante"
+	}
+
+	"sentry_restric"
+	{
+		"pt"	"{red}Você não pode fazer isso..."
+	}
+
 	"ZombieTutorial_Menu"
 	{
 		"pt"	"[ Tutorial Zumbi (Médicos) ]"

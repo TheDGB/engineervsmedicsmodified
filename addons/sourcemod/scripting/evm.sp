@@ -13,12 +13,19 @@ ConVar zve_setup_time = null;
 ConVar zve_round_time = null;
 ConVar zve_tanks = null;
 ConVar zve_super_zombies = null;
+ConVar g_hMaxMetal;
+ConVar g_hMetalRegen;
+ConVar g_hMetalRegenTime;
+ConVar g_hMetalRegenAmount;
 //Game related global variables
 bool InfectionStarted = false;
 bool SuperZombies = false;
 int ZombieHealth = 1250;
 int CountDownCounter = 0;
 float ActualRoundTime = 0.0;
+float g_fMetalRegenTime = 1.0; // Tempo de regeneração (em segundos)
+int g_iMaxMetal = 200; // Limite máximo de metal
+bool g_bMetalRegenEnabled = true; // Se a regeneração de metal está ativada ou desativada
 
 
 
@@ -30,6 +37,7 @@ Handle CountDownHandle = INVALID_HANDLE;
 Handle CountDownStartHandle = INVALID_HANDLE;
 Handle TimerHandle = INVALID_HANDLE;
 Handle ExtraCountDownHandle = INVALID_HANDLE;
+Handle g_hRegenTimer = INVALID_HANDLE;
 bool InPreparation = true;
 float RemainingTime = 0.0;
 
@@ -57,8 +65,7 @@ public void OnPluginStart (){
 	RegServerCmd("zve_debug_checkvictory", DebugCheckVictory);
 	RegAdminCmd("sm_zvecure", Command_zvecure, ADMFLAG_KICK, "Makes an admin be a red engineer");
 	RegAdminCmd("sm_zveinfect", Command_zveinfect, ADMFLAG_KICK, "Makes an admin be a Super Zombie");
-    RegAdminCmd("sm_engietutorial", Command_EngieTutorial, ADMFLAG_CUSTOM6, "Enable/Disable Zombie Tutorial");
-	RegConsoleCmd("sm_zombietutorial", Command_ZombieTutorial);
+    RegAdminCmd("sm_engietutorial", Command_EngieTutorial, "Enable/Disable Zombie Tutorial");
 
 
 // ----------------------------- Convars ------------------------------------
@@ -68,6 +75,18 @@ public void OnPluginStart (){
 	zve_super_zombies = CreateConVar("zve_super_zombies", "30.0", "How much time before round end zombies gain super abilities. Set to 0 to disable it.")
 	zve_tanks = CreateConVar("zve_tanks", "60.0", "How much time after setup the first zombies have a health boost. Set to 0 to disable it.")
 	CreateConVar("zve_healthboost", "60.0", "How much time after setup the first zombies have a health boost. Set to 0 to disable it.")
+	
+	g_hMaxMetal = CreateConVar("zve_maxmetal", "200", "Maximum metal for engineers (200-999)", FCVAR_NONE, true, 200.0, true, 999.0);
+    g_hMetalRegen = CreateConVar("zve_metalregen", "1", "Enables/disables metal regeneration (0 = disabled, 1 = enabled)", FCVAR_NONE, true, 0.0, true, 1.0);
+    g_hMetalRegenTime = CreateConVar("zve_metalregentime", "1.0", "Metal regeneration interval (seconds)", FCVAR_NONE, true, 0.1, true, 10.0);
+    g_hMetalRegenAmount = CreateConVar("zve_metalregenamount", "10", "Amount of metal regenerated per interval", FCVAR_NONE, true, 1.0, true, 100.0);
+
+    // Hook para monitorar mudanças no tempo de regeneração
+    HookConVarChange(g_hMetalRegenTime, OnMetalRegenTimeChanged);
+
+    // Iniciar o timer
+    StartRegenTimer();
+	
 	AutoExecConfig(true, "plugin_zve");
 
 	LoadTranslations("engiesVSmedics.phrases");
@@ -148,13 +167,12 @@ public Action CommandListener_Build(client, const String:command[], argc)
 
 	//Blocks sentry building
 	else if(iObjectType==view_as<int>(TFObject_Sentry) ) {
-		CPrintToChat(client, "{red}You can't do that...");
+		CPrintToChat(client, "%t", "sentry_restric");
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
 
 }
-
 
 
 public Action CommandListener_ChangeTeam(client, const String:command[],argc){
@@ -461,18 +479,19 @@ public int MenuHandler_EngieTutorial(Menu menu, MenuAction action, int client, i
 // ----------------------------- Hud Timer ------------------------------------
 public Action UpdateHud(Handle timer) {
     char timeText[32];
-    char message[64];
+    char message[128];
 
     if (RemainingTime > 0) {
         FormatTime(timeText, sizeof(timeText), "%M:%S", RoundToZero(RemainingTime));
-        if (InPreparation) {
-            Format(message, sizeof(message), "Preparation: %s", timeText);
-        } else {
-            Format(message, sizeof(message), "Time Left: %s", timeText);
-        }
 
         for (int i = 1; i <= MaxClients; i++) {
             if (IsClientInGame(i) && !IsFakeClient(i)) {
+                if (InPreparation) {
+                    FormatEx(message, sizeof(message), "%T: %s", "hud_preparation", i, timeText);
+                } else {
+                    FormatEx(message, sizeof(message), "%T: %s", "hud_round", i, timeText);
+                }
+
                 SetHudTextParams(-1.0, 1.00, 1.0, 255, 255, 255, 255, 0, 0.0, 0.0, 0.0);
                 ShowHudText(i, -1, message);
             }
@@ -486,6 +505,53 @@ public Action UpdateHud(Handle timer) {
         } else {
             CloseHandle(TimerHandle);
             TimerHandle = INVALID_HANDLE;
+        }
+    }
+
+    return Plugin_Continue;
+}
+// ------------------------------ Metal Regen Core ------------------------------
+
+public void StartRegenTimer()
+{
+    if (g_hRegenTimer != INVALID_HANDLE)
+    {
+        CloseHandle(g_hRegenTimer);
+    }
+
+    g_hRegenTimer = CreateTimer(GetConVarFloat(g_hMetalRegenTime), RegenMetalTimer, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+}
+
+public void OnMetalRegenTimeChanged(ConVar conVar, const char[] oldValue, const char[] newValue)
+{
+    StartRegenTimer();
+}
+
+// Parte de scripting do DarthNinja em 'Metal Regen' adaptada para o gamemode...
+public Action RegenMetalTimer(Handle timer)
+{
+    if (GetConVarInt(g_hMetalRegen) == 0)
+    {
+        return Plugin_Continue;
+    }
+
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        // Basicamente verifica se tem um engenheiro no time...
+        if (IsClientInGame(i) && GetClientTeam(i) > 1 && TF2_GetPlayerClass(i) == TFClass_Engineer)
+        {
+            int iCurrentMetal = GetEntProp(i, Prop_Data, "m_iAmmo", 4, 3);
+            int iMaxMetal = GetConVarInt(g_hMaxMetal);
+            int iMetalToAdd = GetConVarInt(g_hMetalRegenAmount);
+
+            int iNewMetal = iCurrentMetal + iMetalToAdd;
+            if (iNewMetal > iMaxMetal)
+            {
+                iNewMetal = iMaxMetal;
+            }
+
+            // Atualiza a munição do jogador...
+            SetEntProp(i, Prop_Data, "m_iAmmo", iNewMetal, 4, 3);
         }
     }
 
@@ -934,6 +1000,11 @@ public void function_teamWin(TFTeam team) //modified version of code in smlib
 
 public OnPluginEnd()
 {
+    if (g_hRegenTimer != INVALID_HANDLE)
+    {
+        CloseHandle(g_hRegenTimer);
+    }
+	
     PrintToServer("Unloading Engineer VS Medics...");
 	ServerCommand("sm_gravity @all 1");
 	ServerCommand("sm_slay @all"); // Matar todos caso tiver players...

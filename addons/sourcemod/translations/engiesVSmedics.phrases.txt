@@ -50,6 +50,21 @@
 		"en"	"{red}The zombies are now on the loose!"
 	}
 
+	"hud_preparation"
+	{
+		"en"	"Preparation"
+	}
+
+	"hud_round"
+	{
+		"en"	"Time Left"
+	}
+
+	"sentry_restric"
+	{
+		"en"	"{red}You can't do that..."
+	}
+
 	"ZombieTutorial_Menu"
 	{
 		"en"	"[ Zombie Tutorial (Medics) ]"
