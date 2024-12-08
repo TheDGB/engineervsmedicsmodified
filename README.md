@@ -23,13 +23,13 @@ Uma modificação muito básica no modo de jogo que recebeu muito amor da comuni
 
 = -------------------------------------------------------------------------------------------------------------------- =
 
-Original publication: https://forums.alliedmods.net/showthread.php?p=2513026
+*Original publication: https://forums.alliedmods.net/showthread.php?p=2513026*
 
-Modified Version: https://github.com/TheDGB/engineervsmedicsmodified
+*Modified Version: https://github.com/TheDGB/engineervsmedicsmodified*
 
 
 [![](https://dcbadge.vercel.app/api/server/xftqrvZSAw)](https://discord.gg/xftqrvZSAw)
 
-Oppressive Territory IP Server TF2: 191.30.24.23:37015
+**Oppressive Territory IP Server TF2: 191.30.24.23:37015**
 
-Oppressive Territory IP Server HL2DM: 191.30.24.23:27015
+**Oppressive Territory IP Server HL2DM: 191.30.24.23:27015**
