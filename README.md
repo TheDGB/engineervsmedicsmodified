@@ -1,8 +1,8 @@
 # Engineer VS Medics Modified (Oppressive Territory)
-(English Version)
 
 # **⚠ WARNING! THIS IS THE FIRST MODIFICATION MADE AND PUBLISHED ON OPPRESSIVE TERRITORY, SO EXPECT COMPILATION ERRORS OR WARNINGS.**
 
+(English Version)
 
 A modification of Engineer VS Medics from the creator shewowkees, created in 2017, inspired by muselk's videos
 Everything that was changed in the script has the purpose of making it functional and adding more things to the plugin
@@ -11,9 +11,11 @@ A very basic modification to the gamemode that received a lot of love from the t
 
 
 
-(Portuguese Version)
+
 
 **⚠ AVISO! ESSA E A PRIMEIRA MODIFICAÇÃO FEITA E PUBLICADA NO OPPRESSIVE TERRITORY, ENTÃO EXPECTE ERROS OU AVISOS DE COMPILAGEM.**
+
+(Portuguese Version)
 
 Uma modificação do Engineer VS Medics do criador shewowkees, criada em 2017, inspirada nos vídeos de muselk
 Tudo o que foi alterado no script tem o propósito de torná-lo funcional e agregar mais coisas ao plugin
