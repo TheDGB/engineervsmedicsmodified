@@ -295,7 +295,6 @@ public Action Evt_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 	if( InfectionStarted) {
 
 		int client = GetClientOfUserId(event.GetInt("userid"));
-		CPrintToChat(client, "%t", "infected");
 		function_CheckVictory();
 		TF2_ChangeClientTeam(client,TFTeam_Blue);
 		TF2_SetPlayerClass(client, TFClass_Medic, true, true);
@@ -882,6 +881,7 @@ public void function_makeZombie(int client, bool firstInfected){
 	TF2_RegeneratePlayer(client);
 	function_StripToMelee(client);
 	ShowZombieTutorial(client);
+	CPrintToChat(client, "%t", "infected");
 				
 	SetEntProp(client, Prop_Send, "m_iHealth", ZombieHealth);
 	SetEntProp(client, Prop_Data, "m_iHealth", ZombieHealth);
