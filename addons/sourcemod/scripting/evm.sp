@@ -16,7 +16,7 @@ ConVar zve_super_zombies = null;
 //Game related global variables
 bool InfectionStarted = false;
 bool SuperZombies = false;
-int ZombieHealth = 1000;
+int ZombieHealth = 1250;
 int CountDownCounter = 0;
 float ActualRoundTime = 0.0;
 
@@ -930,4 +930,12 @@ public void function_teamWin(TFTeam team) //modified version of code in smlib
 	SetVariantInt(view_as<int>(team));
 	AcceptEntityInput(game_round_win, "SetTeam");
 	AcceptEntityInput(game_round_win, "RoundWin");
+}
+
+public OnPluginEnd()
+{
+    PrintToServer("Unloading Engineer VS Medics...");
+	ServerCommand("sm_gravity @all 1");
+	ServerCommand("sm_slay @all"); // Matar todos caso tiver players...
+	ServerCommand("sm_cvar tf_boost_drain_time 15.0");
 }

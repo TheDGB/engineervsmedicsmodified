@@ -32,7 +32,7 @@
 		
 	"version"
 	{
-		"en"	"{darkblue}This server is running {darkblue}Engineer {darkblue}vs {darkblue}Zombies {darkblue}v1.2.5 {gray}(Modified and created by shewowkees/DGB)"
+		"en"	"{green}This server is running Engineer vs Zombies v1.2.5 {orange}(Modified and created by shewowkees/DGB)"
 	}
 	
 	"power_up"
