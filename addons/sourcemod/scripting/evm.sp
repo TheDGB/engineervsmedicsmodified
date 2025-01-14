@@ -90,6 +90,18 @@ public void OnPluginStart (){
 	AutoExecConfig(true, "plugin_zve");
 
 	LoadTranslations("engiesVSmedics.phrases");
+	CPrintToChat(client, "%t", "load_plugin");
+    Stalemate()
+}
+
+/**
+ * Executa o Stalemate.
+ */
+void Stalemate()
+{
+    // Força Stalemate usando comando interno do TF2
+    ServerCommand("mp_forcewin TEAM_NONE"); // TEAM_NONE cria um stalemate.
+    PrintToServer("Stalemate foi iniciado pelo plugin.");
 }
 
 public OnMapStart(){
@@ -1007,6 +1019,8 @@ public OnPluginEnd()
 	
     PrintToServer("Unloading Engineer VS Medics...");
 	ServerCommand("sm_gravity @all 1");
-	ServerCommand("sm_slay @all"); // Matar todos caso tiver players...
 	ServerCommand("sm_cvar tf_boost_drain_time 15.0");
+	
+	CPrintToChat(client, "%t", "unload_plugin");
+	Stalemate();
 }
