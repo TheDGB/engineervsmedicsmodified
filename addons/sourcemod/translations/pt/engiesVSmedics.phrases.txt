@@ -114,4 +114,14 @@
 	{
 		"pt"	"[ Tutorial dos Engenheiros ]"
 	}
+
+	"load_plugin"
+	{
+		"pt" "{red}Plugin carregado no meio do jogo, iniciando o modo de jogo!"
+	}
+
+	"unload_plugin"
+	{
+		"pt" "{red}Plugin encerrado no meio do jogo, reiniciando o jogo."
+	}
 }

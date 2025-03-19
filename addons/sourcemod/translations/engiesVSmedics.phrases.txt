@@ -114,4 +114,14 @@
 	{
 		"en"	"[ Engineers' Tutorial ]"
 	}
+
+	"load_plugin"
+	{
+		"en"	"{red}Plugin loaded mid-game, starting the gamemode!"
+	}
+
+	"unload_plugin"
+	{
+		"en"	"{red}Plugin terminated mid-game, resetting the game."
+	}
 }
