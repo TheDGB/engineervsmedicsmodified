@@ -11,7 +11,6 @@
 // ----------------------------- Convars ------------------------------------
 ConVar zve_setup_time = null;
 ConVar zve_round_time = null;
-ConVar zve_tanks = null;
 ConVar zve_super_zombies = null;
 ConVar g_hMaxMetal;
 ConVar g_hMetalRegen;
@@ -23,9 +22,6 @@ bool SuperZombies = false;
 int ZombieHealth = 1250;
 int CountDownCounter = 0;
 float ActualRoundTime = 0.0;
-float g_fMetalRegenTime = 1.0; // Tempo de regeneração (em segundos)
-int g_iMaxMetal = 200; // Limite máximo de metal
-bool g_bMetalRegenEnabled = true; // Se a regeneração de metal está ativada ou desativada
 
 
 
@@ -65,7 +61,7 @@ public void OnPluginStart (){
 	RegServerCmd("zve_debug_checkvictory", DebugCheckVictory);
 	RegAdminCmd("sm_zvecure", Command_zvecure, ADMFLAG_KICK, "Makes an admin be a red engineer");
 	RegAdminCmd("sm_zveinfect", Command_zveinfect, ADMFLAG_KICK, "Makes an admin be a Super Zombie");
-    RegAdminCmd("sm_engietutorial", Command_EngieTutorial, "Enable/Disable Zombie Tutorial");
+    RegConsoleCmd("sm_engietutorial", Command_EngieTutorial, "Enable/Disable Zombie Tutorial");
 
 
 // ----------------------------- Convars ------------------------------------
@@ -73,7 +69,6 @@ public void OnPluginStart (){
 	zve_round_time = CreateConVar("zve_round_time", "314", "Round time, 5 minutes by default.");
 	zve_setup_time = CreateConVar("zve_setup_time", "60.0", "Setup time, 60s by default.");
 	zve_super_zombies = CreateConVar("zve_super_zombies", "30.0", "How much time before round end zombies gain super abilities. Set to 0 to disable it.")
-	zve_tanks = CreateConVar("zve_tanks", "60.0", "How much time after setup the first zombies have a health boost. Set to 0 to disable it.")
 	CreateConVar("zve_healthboost", "60.0", "How much time after setup the first zombies have a health boost. Set to 0 to disable it.")
 	
 	g_hMaxMetal = CreateConVar("zve_maxmetal", "200", "Maximum metal for engineers (200-999)", FCVAR_NONE, true, 200.0, true, 999.0);
@@ -81,27 +76,31 @@ public void OnPluginStart (){
     g_hMetalRegenTime = CreateConVar("zve_metalregentime", "1.0", "Metal regeneration interval (seconds)", FCVAR_NONE, true, 0.1, true, 10.0);
     g_hMetalRegenAmount = CreateConVar("zve_metalregenamount", "10", "Amount of metal regenerated per interval", FCVAR_NONE, true, 1.0, true, 100.0);
 
-    // Hook para monitorar mudanças no tempo de regeneração
     HookConVarChange(g_hMetalRegenTime, OnMetalRegenTimeChanged);
 
-    // Iniciar o timer
     StartRegenTimer();
 	
 	AutoExecConfig(true, "plugin_zve");
 
 	LoadTranslations("engiesVSmedics.phrases");
-	CPrintToChat(client, "%t", "load_plugin");
+	CPrintToChatAll("%t", "load_plugin");
     Stalemate()
 }
 
-/**
- * Executa o Stalemate.
- */
 void Stalemate()
 {
-    // Força Stalemate usando comando interno do TF2
-    ServerCommand("mp_forcewin TEAM_NONE"); // TEAM_NONE cria um stalemate.
-    PrintToServer("Stalemate foi iniciado pelo plugin.");
+    int iEnt = -1;
+    iEnt = FindEntityByClassname(iEnt, "game_round_win");
+    
+    if (iEnt < 1)
+    {
+        iEnt = CreateEntityByName("game_round_win");
+        DispatchSpawn(iEnt);
+    }
+    
+    SetVariantInt(0);
+    AcceptEntityInput(iEnt, "SetTeam");
+    AcceptEntityInput(iEnt, "RoundWin");
 }
 
 public OnMapStart(){
@@ -321,15 +320,14 @@ public Action OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 
 		return Plugin_Continue;
 }
-public Action Evt_PlayerDeath(Event event, const char[] name, bool dontBroadcast){
-	if( InfectionStarted) {
 
-		int client = GetClientOfUserId(event.GetInt("userid"));
-		function_CheckVictory();
-		TF2_ChangeClientTeam(client,TFTeam_Blue);
-		TF2_SetPlayerClass(client, TFClass_Medic, true, true);
-	}
-	
+public Action Evt_PlayerDeath(Event event, const char[] name, bool dontBroadcast) {
+    if (InfectionStarted) {
+        int client = GetClientOfUserId(event.GetInt("userid"));
+        TF2_ChangeClientTeam(client, TFTeam_Blue);
+        TF2_SetPlayerClass(client, TFClass_Medic, true, true);
+        function_CheckVictory();
+    }
     return Plugin_Handled;
 }
 
@@ -839,7 +837,6 @@ public void function_CheckVictory(){
 	}
 	bool AllEngineersDead = true;
 	bool AllMedicsDead = true;
-	bool NoPlayer = true;
 	//loop from smlib
 	for (new client=1; client <= MaxClients; client++) {
 
@@ -1021,6 +1018,6 @@ public OnPluginEnd()
 	ServerCommand("sm_gravity @all 1");
 	ServerCommand("sm_cvar tf_boost_drain_time 15.0");
 	
-	CPrintToChat(client, "%t", "unload_plugin");
+	CPrintToChatAll("%t", "unload_plugin");
 	Stalemate();
 }
