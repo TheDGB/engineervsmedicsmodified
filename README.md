@@ -1,46 +1,41 @@
-# Engineer VS Medics Modified (Oppressive Territory)
+# Engineer VS Medics Modified
+A **modification** of Engineer VS Medics from the creator shewowkees, created in 2017, inspired by **muselk's videos.**
 
-**⚠ WARNING! THIS IS MY FIRST MODIFICATION MADE AND PUBLISHED ON GIT HUB, SO EXPECT COMPILATION ERRORS OR WARNINGS.**
+Everything that was changed in the script has the purpose of making it **functional** and adding **more things to the plugin.**
 
-(English Version)
+A very **basic modification** to the gamemode that received a lot of love from the **Team Fortress 2 community.**
 
-A modification of Engineer VS Medics from the creator shewowkees, created in 2017, inspired by muselk's videos
-Everything that was changed in the script has the purpose of making it functional and adding more things to the plugin
+> [!IMPORTANT]\
+> ***⚠ WARNING! THIS IS MY FIRST MODIFICATION MADE AND PUBLISHED ON GIT HUB, SO EXPECT COMPILATION ERRORS OR WARNINGS.***
 
-A very basic modification to the gamemode that received a lot of love from the team fortress 2 community.
+#### Gamemode Cvar's
 
+| **ConVars**               | **Default Value** | **Description**                                                                 |
+|---------------------------|-------------------|---------------------------------------------------------------------------------|
+| `zve_round_time`          | `314`             | Round time, 5 minutes by default.                                               |
+| `zve_setup_time`          | `60.0`            | Setup time, 60s by default.                                                     |
+| `zve_super_zombies`       | `30.0`            | (Add day to replay bot name, 1 for yes, 0 for no)                               |
+| `zve_healthboost`         | `60.0`            | How much time before round end zombies gain super abilities. 0 to disable it.   |
+| `zve_maxmetal`            | `200`             | Maximum metal for engineers (200-999)                                           |
+| `zve_metalregen`          | `1`               | Enables/disables metal regeneration (0 = disabled, 1 = enabled)                 |
+| `zve_metalregentime`      | `1.0`             | Metal regeneration interval (seconds)                                           |
+| `zve_metalregenamount`    | `10`              | Amount of metal regenerated per interval                                        |
 
+#### Commands
 
+| **Command**               | **Description**                                                                 |
+|---------------------------|---------------------------------------------------------------------------------|
+| `zve_debug_checkvictory`  | Checks victory                                                                  |
+| `sm_zvecure`              | Makes an admin be a red engineer                                                |
+| `sm_zveinfect`            | Makes an admin be a Super Zombie                                                |
+| `sm_engietutorial`        | Enable/Disable Engineer Tutorial                                                |
+| `sm_medictutorial`        | Enable/Disable Zombie Tutorial                                                  |
 
+#### Recommended Plugins
 
-**⚠ AVISO! ESTA É MINHA PRIMEIRA MODIFICAÇÃO FEITA E PUBLICADA NO GIT HUB, ENTÃO ESPERE ERROS DE COMPILAÇÃO OU AVISOS.**
+- Engi Pads: https://github.com/Starblaster64/TF2-Engineer-Pads/tree/master
+- Double Jump: https://forums.alliedmods.net/showthread.php?p=895212
 
-(Portuguese Version)
-
-Uma modificação do Engineer VS Medics do criador shewowkees, criada em 2017, inspirada nos vídeos de muselk
-Tudo o que foi alterado no script tem o propósito de torná-lo funcional e agregar mais coisas ao plugin
-
-Quer ajudar no projeto?, você pode modificar ou conversar comigo sobre a modificação.
-
-Uma modificação muito básica no modo de jogo que recebeu muito amor da comunidade do Team Fortress 2.
-
-
-= ------------------------------------------------------------------------------------------------------------------ =
-***Recommended***
-
-Engi Pads: https://github.com/Starblaster64/TF2-Engineer-Pads/tree/master
-
-Double Jump: https://forums.alliedmods.net/showthread.php?p=895212
-
-**Originals**
-
-*Original publication: https://forums.alliedmods.net/showthread.php?p=2513026*
-
-*Modified Version: https://github.com/TheDGB/engineervsmedicsmodified*
-
+# **Join our Discord Server!**
 
 [![](https://dcbadge.vercel.app/api/server/xftqrvZSAw)](https://discord.gg/xftqrvZSAw)
-
-**Oppressive Territory IP Server TF2: 191.30.24.23:37015**
-
-**Oppressive Territory IP Server HL2DM: 191.30.24.23:27015**
