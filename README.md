@@ -25,11 +25,11 @@ A very **basic modification** to the gamemode that received a lot of love from t
 
 | **Command**               | **Description**                                                                 |
 |---------------------------|---------------------------------------------------------------------------------|
-| `zve_debug_checkvictory`  | (Enable Dynamic Replay Name, 1 for yes, 0 for no)                               |
-| `sm_zvecure`              | (Block the broadcast name change for the bot in the chat)                       |
-| `sm_zveinfect`            | (Add day to replay bot name, 1 for yes, 0 for no)                               |
-| `sm_engietutorial`        | (Activate dynamic descriptions, 1 for yes, 0 for no)                            |
-| `sm_medictutorial`        | (Activate random rotation of descriptions, 1 for yes, 0 for no)                 |
+| `zve_debug_checkvictory`  | Checks victory                                                                  |
+| `sm_zvecure`              | Makes an admin be a red engineer                                                |
+| `sm_zveinfect`            | Makes an admin be a Super Zombie                                                |
+| `sm_engietutorial`        | Enable/Disable Engineer Tutorial                                                |
+| `sm_medictutorial`        | Enable/Disable Zombie Tutorial                                                  |
 
 #### Recommended Plugins
 
