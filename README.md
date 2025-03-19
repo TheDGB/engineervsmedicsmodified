@@ -23,8 +23,8 @@ A very **basic modification** to the gamemode that received a lot of love from t
 
 #### Commands
 
-| **Command**               | **Description**   |                                                             |
-|---------------------------|-------------------|-------------------------------------------------------------|
+| **Command**               | **Description**                                                                 |
+|---------------------------|---------------------------------------------------------------------------------|
 | `zve_debug_checkvictory`  | (Enable Dynamic Replay Name, 1 for yes, 0 for no)                               |
 | `sm_zvecure`              | (Block the broadcast name change for the bot in the chat)                       |
 | `sm_zveinfect`            | (Add day to replay bot name, 1 for yes, 0 for no)                               |
