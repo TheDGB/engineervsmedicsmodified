@@ -61,7 +61,8 @@ public void OnPluginStart (){
 	RegServerCmd("zve_debug_checkvictory", DebugCheckVictory);
 	RegAdminCmd("sm_zvecure", Command_zvecure, ADMFLAG_KICK, "Makes an admin be a red engineer");
 	RegAdminCmd("sm_zveinfect", Command_zveinfect, ADMFLAG_KICK, "Makes an admin be a Super Zombie");
-    RegConsoleCmd("sm_engietutorial", Command_EngieTutorial, "Enable/Disable Zombie Tutorial");
+    RegConsoleCmd("sm_engietutorial", Command_EngieTutorial, "Enable/Disable Engineer Tutorial");
+	RegConsoleCmd("sm_medictutorial", Command_ZombieTutorial, "Enable/Disable Zombie Tutorial");
 
 
 // ----------------------------- Convars ------------------------------------
@@ -427,7 +428,6 @@ public void ShowZombieTutorial(int client) {
     menu.Display(client, 20);
 }
 
-// Manipulador do menu
 public int MenuHandler_ZombieTutorial(Menu menu, MenuAction action, int client, int item) {
     if (action == MenuAction_End) {
         menu.Close();
@@ -435,7 +435,6 @@ public int MenuHandler_ZombieTutorial(Menu menu, MenuAction action, int client, 
     return 0;
 }
 
-// Faz abrir o menu de tutorial por comando.
 public Action Command_ZombieTutorial(int client, int args) {
     if (!IsClientInGame(client)) {
 	return Plugin_Continue;
