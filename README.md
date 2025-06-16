@@ -19,7 +19,13 @@ A very **basic modification** to the gamemode that received a lot of love from t
 | `zve_maxmetal`            | `200`             | Maximum metal for engineers (200-999)                                           |
 | `zve_metalregen`          | `1`               | Enables/disables metal regeneration (0 = disabled, 1 = enabled)                 |
 | `zve_metalregentime`      | `1.0`             | Metal regeneration interval (seconds)                                           |
-| `zve_metalregenamount`    | `10`              | Amount of metal regenerated per interval                                        |
+| `zve_timehud`             | `10`              | Enables/disables the round timeout timer.                                       |
+| `zve_timehud_x`           | `10`              | X position of the time HUD.                                                     |
+| `zve_timehud_z`           | `10`              | Z (Y) position of the weather HUD.                                              |
+| `zve_timehud_color`       | `10`              | Timer HUD Color (R,G,B,A).                                                      |
+| `zve_nohud`               | `10`              | Disables the game's HUD a bit for players.                                      |
+| `zve_zombiedoublejump`    | `10`              | Enables double jump for zombies (1 = yes, 0 = no)                               |
+| `zve_zombiedoublejump_boost`| `10`            | Double Jump Vertical Power for Zombies                                          |
 
 #### Commands
 
