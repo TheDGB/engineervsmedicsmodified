@@ -95,7 +95,7 @@ public void OnPluginStart (){
 	zve_timehud_z = CreateConVar("zve_timehud_z", "1.00", "Z (Y) position of the weather HUD.");
 	zve_timehud_color = CreateConVar("zve_timehud_color", "255,255,255,255", "Timer HUD Color (R,G,B,A).");
 	
-	zve_nohud = CreateConVar("zve_nohud", "1", "Disables the game's HUD a bit for players.", _, true, 0.0, true, 1.0);
+	zve_nohud = CreateConVar("zve_nohud", "0", "Disables the game's HUD a bit for players.", _, true, 0.0, true, 1.0);
 
 	CreateConVar("zve_healthboost", "60.0", "How much time after setup the first zombies have a health boost. Set to 0 to disable it.")
 	
