@@ -60,7 +60,7 @@ public Plugin myinfo ={
 	name = "Engineer VS Medics Modified",
 	author = "shewowkees/modified by DGB",
 	description = "Engies VS Zombies",
-	version = "1.25",
+	version = "1.30",
 };
 
 public void OnPluginStart (){
