@@ -1,3 +1,7 @@
+/*****************************************************************************
+                       Engineer VS Medics Modified
+******************************************************************************/
+
 #include <sourcemod>
 #include <sdktools>
 #include <tf2>
@@ -6,7 +10,7 @@
 #include <sdkhooks>
 #include <smlib>
 #include <morecolors>
-#pragma tabsize 0 // Não faz ter conflito com linhas ou tabelas.
+#pragma tabsize 0
 
 // ----------------------------- Convars ------------------------------------
 ConVar zve_setup_time = null;
@@ -16,14 +20,32 @@ ConVar g_hMaxMetal;
 ConVar g_hMetalRegen;
 ConVar g_hMetalRegenTime;
 ConVar g_hMetalRegenAmount;
+ConVar zve_zombiedoublejump;
+ConVar zve_zombiedoublejump_boost;
+
+// Novos ConVars para HUD
+ConVar zve_timehud = null;
+ConVar zve_timehud_x = null;
+ConVar zve_timehud_z = null;
+ConVar zve_timehud_color = null;
+ConVar zve_nohud = null;
+
 //Game related global variables
 bool InfectionStarted = false;
 bool SuperZombies = false;
+bool isZombie[MAXPLAYERS+1];
 int ZombieHealth = 1250;
 int CountDownCounter = 0;
+int g_iJumps[MAXPLAYERS+1];
+int g_fLastButtons[MAXPLAYERS+1];
+int g_fLastFlags[MAXPLAYERS+1];
 float ActualRoundTime = 0.0;
 
-
+// Variáveis para controle de HUD
+bool g_bShowTimeHud = true;
+float g_fTimeHudX = -1.0;
+float g_fTimeHudY = 1.00;
+int g_iTimeHudColor[4] = {255, 255, 255, 255};
 
 // ----------------------------- Handlers ------------------------------------
 Handle RedWonHandle = INVALID_HANDLE;
@@ -32,7 +54,6 @@ Handle InfectionHandle = INVALID_HANDLE;
 Handle CountDownHandle = INVALID_HANDLE;
 Handle CountDownStartHandle = INVALID_HANDLE;
 Handle TimerHandle = INVALID_HANDLE;
-Handle ExtraCountDownHandle = INVALID_HANDLE;
 Handle g_hRegenTimer = INVALID_HANDLE;
 bool InPreparation = true;
 float RemainingTime = 0.0;
@@ -69,15 +90,31 @@ public void OnPluginStart (){
 
 	zve_round_time = CreateConVar("zve_round_time", "314", "Round time, 5 minutes by default.");
 	zve_setup_time = CreateConVar("zve_setup_time", "60.0", "Setup time, 60s by default.");
-	zve_super_zombies = CreateConVar("zve_super_zombies", "30.0", "How much time before round end zombies gain super abilities. Set to 0 to disable it.")
+	zve_super_zombies = CreateConVar("zve_super_zombies", "30.0", "How much time before round end zombies gain super abilities. Set to 0 to disable it.");
+
+	zve_timehud = CreateConVar("zve_timehud", "1", "Enables/disables the round timeout timer.", _, true, 0.0, true, 1.0);
+	zve_timehud_x = CreateConVar("zve_timehud_x", "-1.0", "X position of the time HUD.");
+	zve_timehud_z = CreateConVar("zve_timehud_z", "1.00", "Z (Y) position of the weather HUD.");
+	zve_timehud_color = CreateConVar("zve_timehud_color", "255,255,255,255", "Timer HUD Color (R,G,B,A).");
+	
+	zve_nohud = CreateConVar("zve_nohud", "1", "Disables the game's HUD a bit for players.", _, true, 0.0, true, 1.0);
+
 	CreateConVar("zve_healthboost", "60.0", "How much time after setup the first zombies have a health boost. Set to 0 to disable it.")
 	
 	g_hMaxMetal = CreateConVar("zve_maxmetal", "200", "Maximum metal for engineers (200-999)", FCVAR_NONE, true, 200.0, true, 999.0);
     g_hMetalRegen = CreateConVar("zve_metalregen", "1", "Enables/disables metal regeneration (0 = disabled, 1 = enabled)", FCVAR_NONE, true, 0.0, true, 1.0);
     g_hMetalRegenTime = CreateConVar("zve_metalregentime", "1.0", "Metal regeneration interval (seconds)", FCVAR_NONE, true, 0.1, true, 10.0);
     g_hMetalRegenAmount = CreateConVar("zve_metalregenamount", "10", "Amount of metal regenerated per interval", FCVAR_NONE, true, 1.0, true, 100.0);
+	
+	zve_zombiedoublejump = CreateConVar("zve_zombiedoublejump", "1", "Enables double jump for zombies (1 = yes, 0 = no)", _, true, 0.0, true, 1.0);
+    zve_zombiedoublejump_boost = CreateConVar("zve_zombiedoublejump_boost", "250.0", "Double Jump Vertical Power for Zombies");
 
     HookConVarChange(g_hMetalRegenTime, OnMetalRegenTimeChanged);
+	HookConVarChange(zve_timehud, OnTimeHudChanged);
+	HookConVarChange(zve_timehud_x, OnTimeHudPosChanged);
+	HookConVarChange(zve_timehud_z, OnTimeHudPosChanged);
+	HookConVarChange(zve_timehud_color, OnTimeHudColorChanged);
+	HookConVarChange(zve_nohud, OnNoHudChanged);
 
     StartRegenTimer();
 	
@@ -86,6 +123,43 @@ public void OnPluginStart (){
 	LoadTranslations("engiesVSmedics.phrases");
 	CPrintToChatAll("%t", "load_plugin");
     Stalemate()
+}
+
+// Funções para tratar mudanças nas ConVars do HUD
+public void OnTimeHudChanged(ConVar convar, const char[] oldValue, const char[] newValue) {
+	g_bShowTimeHud = GetConVarBool(zve_timehud);
+}
+
+public void OnTimeHudPosChanged(ConVar convar, const char[] oldValue, const char[] newValue) {
+	g_fTimeHudX = GetConVarFloat(zve_timehud_x);
+	g_fTimeHudY = GetConVarFloat(zve_timehud_z);
+}
+
+public void OnTimeHudColorChanged(ConVar convar, const char[] oldValue, const char[] newValue) {
+	char colorStr[32];
+	GetConVarString(zve_timehud_color, colorStr, sizeof(colorStr));
+	ParseColorString(colorStr, g_iTimeHudColor);
+}
+
+public void OnNoHudChanged(ConVar convar, const char[] oldValue, const char[] newValue) {
+	int flags = GetConVarInt(zve_nohud) ? HIDEHUD_MISCSTATUS : 0;
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i) && !IsFakeClient(i)) {
+			Client_SetHideHud(i, flags);
+		}
+	}
+}
+
+void ParseColorString(const char[] colorStr, int colors[4]) {
+	char parts[4][4];
+	int count = ExplodeString(colorStr, ",", parts, 4, 4);
+	
+	for (int i = 0; i < count; i++) {
+		colors[i] = StringToInt(parts[i]);
+	}
+	
+	// Garantir alpha padrão se não especificado
+	if (count < 4) colors[3] = 255;
 }
 
 void Stalemate()
@@ -118,6 +192,13 @@ public void OnClientPostAdminCheck(int client){
 
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
+}
+
+public void OnClientDisconnect(int client)
+{
+    g_iJumps[client] = 0;
+    g_fLastButtons[client] = 0;
+    g_fLastFlags[client] = 0;
 }
 // ----------------------------- Commands ------------------------------------
 public Action DebugCheckVictory(int args){
@@ -233,7 +314,7 @@ public Action Evt_PlayerSpawnChangeTeam(Event event, const char[] name, bool don
     int client = GetClientOfUserId(event.GetInt("userid"));
     
     if (IsClientReplay(client)) {
-        return Plugin_Continue;  // Se for replay, a execução é interrompida aqui.
+        return Plugin_Continue;
     }
 
     if (Client_IsValid(client) && Client_IsIngame(client)) {
@@ -275,6 +356,13 @@ public Action Evt_PlayerSpawnChangeClass(Event event, const char[] name, bool do
 			function_StripToMelee(client);
 		}
 
+		// Aplicar configuração de nohud
+		if (GetConVarBool(zve_nohud)) {
+			Client_SetHideHud(client, HIDEHUD_MISCSTATUS);
+		} else {
+			Client_SetHideHud(client, 0);
+		}
+
 		function_CheckVictory();
 	}
 	
@@ -294,6 +382,11 @@ public Action TF2_CalcIsAttackCritical(int client, int weapon, char[] weaponname
 
 public Action OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype)
 {
+        if (SuperZombies && TF2_GetClientTeam(attacker) == TFTeam_Blue) {
+            damage *= 2.0;
+            return Plugin_Changed;
+        }
+	
 		if(!Client_IsValid(victim)||!Client_IsValid(attacker)){
 			return Plugin_Continue;
 		}
@@ -351,7 +444,18 @@ public Action Evt_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	InfectionStarted = false;
 	ServerCommand("sm_gravity @all 1");
 	ServerCommand("sm_cvar tf_boost_drain_time 0");
+	
+	for (int i = 1; i <= MaxClients; i++) isZombie[i] = false;
 
+    float setupTime = GetConVarFloat(zve_setup_time);
+	
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        g_iJumps[i] = 0;
+        g_fLastButtons[i] = 0;
+        g_fLastFlags[i] = 0;
+    }
+	
 	if(RedWonHandle!=INVALID_HANDLE) {
 		CloseHandle(RedWonHandle);
 		RedWonHandle=INVALID_HANDLE;
@@ -390,17 +494,30 @@ public Action Evt_RoundStart(Event event, const char[] name, bool dontBroadcast)
 		SuperZombiesTimerHandle = CreateTimer(ActualRoundTime-GetConVarFloat(zve_super_zombies), SuperZombiesTimer);
 	}
 
-	float setupTime = GetConVarFloat(zve_setup_time);
 	InfectionHandle = CreateTimer(setupTime, Infection);
 	if(setupTime>11.0) {
 		CountDownStartHandle = CreateTimer(setupTime-4.0, CountDownStart);
-		ExtraCountDownHandle = CreateTimer(setupTime - 10.0, ExtraCountDown);
 	}
 
 
 	function_PrepareMap();
 	
 	CPrintToChatAll("%t", "version");
+
+	// Carregar configurações iniciais do HUD
+	g_bShowTimeHud = GetConVarBool(zve_timehud);
+	g_fTimeHudX = GetConVarFloat(zve_timehud_x);
+	g_fTimeHudY = GetConVarFloat(zve_timehud_z);
+	char colorStr[32];
+	GetConVarString(zve_timehud_color, colorStr, sizeof(colorStr));
+	ParseColorString(colorStr, g_iTimeHudColor);
+
+	int nohudFlags = GetConVarBool(zve_nohud) ? HIDEHUD_MISCSTATUS : 0;
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i) && !IsFakeClient(i)) {
+			Client_SetHideHud(i, nohudFlags);
+		}
+	}
 
     TimerHandle = CreateTimer(1.0, UpdateHud, _, TIMER_REPEAT);
     return Plugin_Continue;
@@ -501,8 +618,23 @@ public Action UpdateHud(Handle timer) {
                     FormatEx(message, sizeof(message), "%T: %s", "hud_round", i, timeText);
                 }
 
-                SetHudTextParams(-1.0, 1.00, 1.0, 255, 255, 255, 255, 0, 0.0, 0.0, 0.0);
-                ShowHudText(i, -1, message);
+                // Mostrar HUD apenas se estiver ativado
+                if (g_bShowTimeHud) {
+                    SetHudTextParams(
+                        g_fTimeHudX, 
+                        g_fTimeHudY, 
+                        1.0, 
+                        g_iTimeHudColor[0], 
+                        g_iTimeHudColor[1], 
+                        g_iTimeHudColor[2], 
+                        g_iTimeHudColor[3], 
+                        0, 
+                        0.0, 
+                        0.0, 
+                        0.0
+                    );
+                    ShowHudText(i, -1, message);
+                }
             }
         }
 
@@ -546,7 +678,6 @@ public Action RegenMetalTimer(Handle timer)
 
     for (int i = 1; i <= MaxClients; i++)
     {
-        // Basicamente verifica se tem um engenheiro no time...
         if (IsClientInGame(i) && GetClientTeam(i) > 1 && TF2_GetPlayerClass(i) == TFClass_Engineer)
         {
             int iCurrentMetal = GetEntProp(i, Prop_Data, "m_iAmmo", 4, 3);
@@ -559,13 +690,61 @@ public Action RegenMetalTimer(Handle timer)
                 iNewMetal = iMaxMetal;
             }
 
-            // Atualiza a munição do jogador...
             SetEntProp(i, Prop_Data, "m_iAmmo", iNewMetal, 4, 3);
         }
     }
 
     return Plugin_Continue;
 }
+// ----------------------------- Double Jump -------------------------------
+
+public void OnGameFrame()
+{
+    if (!GetConVarBool(zve_zombiedoublejump)) return;
+
+    for (int client = 1; client <= MaxClients; client++)
+    {
+        if (!IsClientInGame(client) || !IsPlayerAlive(client)) continue;
+        if (TF2_GetClientTeam(client) != TFTeam_Blue) continue;
+        
+        DoubleJump(client);
+    }
+}
+
+void DoubleJump(int client)
+{
+    int fCurFlags = GetEntityFlags(client);
+    int fCurButtons = GetClientButtons(client);
+    int lastFlags = g_fLastFlags[client];
+    int lastButtons = g_fLastButtons[client];
+
+    if ((lastFlags & FL_ONGROUND) && !(fCurFlags & FL_ONGROUND) && 
+        !(lastButtons & IN_JUMP) && (fCurButtons & IN_JUMP))
+    {
+        g_iJumps[client] = 1;
+    }
+    else if (fCurFlags & FL_ONGROUND)
+    {
+        g_iJumps[client] = 0;
+    }
+    else if (!(lastButtons & IN_JUMP) && (fCurButtons & IN_JUMP) && g_iJumps[client] > 0)
+    {
+        PerformDoubleJump(client);
+    }
+
+    g_fLastFlags[client] = fCurFlags;
+    g_fLastButtons[client] = fCurButtons;
+}
+
+void PerformDoubleJump(int client)
+{
+    g_iJumps[client] = 0;
+    float vVel[3];
+    GetEntPropVector(client, Prop_Data, "m_vecVelocity", vVel);
+    vVel[2] = GetConVarFloat(zve_zombiedoublejump_boost);
+    TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, vVel);
+}
+
 // ----------------------------- Timers ------------------------------------
 public Action reCollide(Handle timer, any client){
 
@@ -600,16 +779,14 @@ public Action CountDownStart(Handle timer){
 public Action SuperZombiesTimer(Handle timer){
     CPrintToChatAll("%t", "power_up");
     SuperZombies = true;
-    ServerCommand("sm_gravity @all 0.5");
 
     // Loop de clientes conectados
-    for (new client = 1; client <= MaxClients; client++) {
-
-        if (!IsClientConnected(client)) {
+    for (int client = 1; client <= MaxClients; client++) {
+        if (!IsClientInGame(client) || !IsPlayerAlive(client) || TF2_GetClientTeam(client) != TFTeam_Blue) {
             continue;
         }
 
-        if (!IsClientInGame(client)) {
+        if (!IsClientConnected(client)) {
             continue;
         }
 
@@ -622,8 +799,6 @@ public Action SuperZombiesTimer(Handle timer){
         TF2_AddCondition(client, TFCond_CritOnDamage);
 
         TF2_AddCondition(client, TFCond_HalloweenSpeedBoost);
-        
-        TF2_AddCondition(client, TFCond_SmallBulletResist);
 		
 		TF2_AddCondition(client, TFCond_SpawnOutline);
 		
@@ -655,7 +830,6 @@ public Action CountDown(Handle timer){
 public Action ExtraCountDown(Handle timer) {
     char extraMessage[] = "{white}A {red}Infecção {white}começara daqui a pouco...";
     CPrintToChatAll(extraMessage);
-    ExtraCountDownHandle = INVALID_HANDLE;
     return Plugin_Stop;
 }
 
@@ -675,9 +849,7 @@ public Action Infection(Handle timer){
 public Action RedWon(Handle timer){
 	function_teamWin(TFTeam_Red)
 	RedWonHandle=INVALID_HANDLE;
-	
     return Plugin_Handled;
-
 }
 
 // ----------------------------- Functions ------------------------------------
@@ -778,7 +950,6 @@ public void function_SafeRespawn(int client){
 
 
 }
-
 
 public void function_CheckVictory(){
 	/*PrintToServer("Checking victory conditions...");
@@ -954,8 +1125,6 @@ public void function_makeZombie(int client, bool firstInfected){
 	SetEntProp(client, Prop_Send, "m_lifeState", EntProp);
 	TF2_RegeneratePlayer(client);
 	function_StripToMelee(client);
-	ShowZombieTutorial(client);
-	CPrintToChat(client, "%t", "infected");
 				
 	SetEntProp(client, Prop_Send, "m_iHealth", ZombieHealth);
 	SetEntProp(client, Prop_Data, "m_iHealth", ZombieHealth);
@@ -965,11 +1134,18 @@ public void function_makeZombie(int client, bool firstInfected){
 	GetEntPropVector(client, Prop_Send, "m_vecOrigin", clientPos);
 	Explode(clientPos, 0.0, 500.0, "merasmus_bomb_explosion_blast", "vo/medic_medic03.mp3");
 	if(firstInfected){
-		TF2_AddCondition(client, view_as<TFCond>(29), 30.0);
+		TF2_AddCondition(client, view_as<TFCond>(29), 40.0);
+		TF2_AddCondition(client, view_as<TFCond>(5), 15.0);
+		TF2_StunPlayer(client, 15.0, 0.0, TF_STUNFLAGS_BIGBONK, 0);
 		SetEntProp(client, Prop_Send, "m_iHealth", ZombieHealth+500);
 		SetEntProp(client, Prop_Data, "m_iHealth", ZombieHealth+500);
 	}
-
+	
+    if (!isZombie[client]) { 
+        CPrintToChat(client, "%t", "infected");
+        ShowZombieTutorial(client);
+        isZombie[client] = true;
+    }
 }
 //code found in snippets section of the forum
 public void Explode(float flPos[3], float flDamage, float flRadius, const char[] strParticle, const char[] strSound)
@@ -987,6 +1163,12 @@ public void Explode(float flPos[3], float flDamage, float flRadius, const char[]
 }
 public void function_teamWin(TFTeam team) //modified version of code in smlib
 {
+    for (int i = 1; i <= MaxClients; i++) {
+        if (IsClientInGame(i) && !IsFakeClient(i)) {
+            TF2_RegeneratePlayer(i);
+        }
+    }
+	
 	InfectionStarted = false;
 	new game_round_win = FindEntityByClassname(-1, "game_round_win");
 
