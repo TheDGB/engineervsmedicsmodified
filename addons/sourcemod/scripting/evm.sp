@@ -23,7 +23,6 @@ ConVar g_hMetalRegenAmount;
 ConVar zve_zombiedoublejump;
 ConVar zve_zombiedoublejump_boost;
 
-// Novos ConVars para HUD
 ConVar zve_timehud = null;
 ConVar zve_timehud_x = null;
 ConVar zve_timehud_z = null;
@@ -41,7 +40,6 @@ int g_fLastButtons[MAXPLAYERS+1];
 int g_fLastFlags[MAXPLAYERS+1];
 float ActualRoundTime = 0.0;
 
-// Variáveis para controle de HUD
 bool g_bShowTimeHud = true;
 float g_fTimeHudX = -1.0;
 float g_fTimeHudY = 1.00;
@@ -125,7 +123,6 @@ public void OnPluginStart (){
     Stalemate()
 }
 
-// Funções para tratar mudanças nas ConVars do HUD
 public void OnTimeHudChanged(ConVar convar, const char[] oldValue, const char[] newValue) {
 	g_bShowTimeHud = GetConVarBool(zve_timehud);
 }
@@ -158,7 +155,6 @@ void ParseColorString(const char[] colorStr, int colors[4]) {
 		colors[i] = StringToInt(parts[i]);
 	}
 	
-	// Garantir alpha padrão se não especificado
 	if (count < 4) colors[3] = 255;
 }
 
@@ -356,7 +352,6 @@ public Action Evt_PlayerSpawnChangeClass(Event event, const char[] name, bool do
 			function_StripToMelee(client);
 		}
 
-		// Aplicar configuração de nohud
 		if (GetConVarBool(zve_nohud)) {
 			Client_SetHideHud(client, HIDEHUD_MISCSTATUS);
 		} else {
@@ -504,7 +499,6 @@ public Action Evt_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	
 	CPrintToChatAll("%t", "version");
 
-	// Carregar configurações iniciais do HUD
 	g_bShowTimeHud = GetConVarBool(zve_timehud);
 	g_fTimeHudX = GetConVarFloat(zve_timehud_x);
 	g_fTimeHudY = GetConVarFloat(zve_timehud_z);
@@ -618,7 +612,6 @@ public Action UpdateHud(Handle timer) {
                     FormatEx(message, sizeof(message), "%T: %s", "hud_round", i, timeText);
                 }
 
-                // Mostrar HUD apenas se estiver ativado
                 if (g_bShowTimeHud) {
                     SetHudTextParams(
                         g_fTimeHudX, 
@@ -780,7 +773,6 @@ public Action SuperZombiesTimer(Handle timer){
     CPrintToChatAll("%t", "power_up");
     SuperZombies = true;
 
-    // Loop de clientes conectados
     for (int client = 1; client <= MaxClients; client++) {
         if (!IsClientInGame(client) || !IsPlayerAlive(client) || TF2_GetClientTeam(client) != TFTeam_Blue) {
             continue;
