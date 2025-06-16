@@ -40,7 +40,6 @@ A very **basic modification** to the gamemode that received a lot of love from t
 #### Recommended Plugins
 
 - Engi Pads: https://github.com/Starblaster64/TF2-Engineer-Pads/tree/master
-- Double Jump: https://forums.alliedmods.net/showthread.php?p=895212
 
 # **Join our Discord Server!**
 
