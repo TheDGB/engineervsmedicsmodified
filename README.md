@@ -44,3 +44,5 @@ A very **basic modification** to the gamemode that received a lot of love from t
 # **Join our Discord Server!**
 
 [![](https://dcbadge.vercel.app/api/server/xftqrvZSAw)](https://discord.gg/xftqrvZSAw)
+
+[![](http://fastdl.optr.me:8090/embed/steamgroup.png)](https://steamcommunity.com/groups/optr-me)
